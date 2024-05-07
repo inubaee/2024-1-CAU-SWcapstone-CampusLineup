@@ -8,6 +8,7 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
       /* 추가적인 CSS 스타일링 */
       .header {
@@ -47,10 +48,14 @@
       }
     </style>
   </head>
+  <div id="header-placeholder"></div>
+  <script>
+      $(function(){
+          $("#header-placeholder").load("header.html");
+      });
+  </script>
+
   <body>
-    <div class="header">
-      <div>캠퍼스 라인업</div>
-    </div>
 
     <div class="container mt-4">
       <!-- 포스터 -->
