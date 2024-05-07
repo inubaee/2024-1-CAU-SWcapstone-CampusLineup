@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쪽지함</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+         body {
+            margin-top: 0; /* Remove the top padding to eliminate extra space */
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            display: flex;
+            margin: 15px auto; /* Adjusted for spacing between header and content */
+            max-width: 1200px;
+        }
+
+        .messages-list {
+            width: 30%;
+            background-color: white;
+            margin-right: 10px;
+            padding: 20px;
+            height: 600px; /* Adjust based on your needs */
+            overflow-y: auto; /* Enable scrolling */
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+
+        .message-content {
+            width: 70%;
+            background-color: white;
+            padding: 20px;
+            height: 600px; /* Adjust based on your needs */
+            overflow-y: auto; /* Enable scrolling */
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+
+        .message-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .message-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .message-item.active {
+            background-color: #ddd;
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script>
+        $(function(){
+            $("#header-placeholder").load("header.html");
+        });
+    </script>
+    
+    <div class="container">
+        <div class="messages-list">
+            <h2>쪽지 함</h2>
+            <!-- Dynamically populate this list with message summaries -->
+            <div class="message-item" onclick="displayMessage('message1')">메시지 1</div>
+            <div class="message-item" onclick="displayMessage('message2')">메시지 2</div>
+            <div class="message-item" onclick="displayMessage('message3')">메시지 3</div>
+        </div>
+        <div class="message-content">
+            <!-- Dynamically display selected message content here -->
+            <h4>쪽지 내용</h4>
+            <div id="selected-message-content">
+                <p>쪽지 내용이 여기에 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function displayMessage(messageId) {
+            const messages = {
+                message1: "쪽지 1의 내용입니다. ...",
+                message2: "쪽지 2의 내용입니다. ...",
+                message3: "쪽지 3의 내용입니다. ..."
+            };
+            document.getElementById('selected-message-content').innerHTML = `<p>${messages[messageId]}</p>`;
+        }
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-login {
+            max-width: 400px;
+            padding: 15px;
+            margin: 20px auto;
+            background-color: white;
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+
+        .form-login h2 {
+        text-align: center; /* 타이틀을 중앙에 배치 */
+        margin-bottom: 10px; /* 타이틀과 다음 필드 사이의 간격 */
+        }
+
+        .form-control {
+            margin-bottom: 15px; /* 입력 필드 간에 15px 간격 추가 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form class="form-login" action="/submit-login" method="POST">
+            <h2 class="form-login-heading">로그인</h2>
+            <input type="email" id="email" name="email" class="form-control" placeholder="이메일" required autofocus>
+            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호" required>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
+            <a href="join.html" class="btn btn-lg btn-primary btn-block">회원가입</a> <!-- 버튼을 링크로 변경 -->
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-signup {
+            max-width: 400px;
+            padding: 15px;
+            margin: 20px auto;
+            background-color: white;
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+
+        .form-signup h2 {
+        text-align: center; /* 타이틀을 중앙에 배치 */
+        margin-bottom: 10px; /* 타이틀과 다음 필드 사이의 간격 */
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .file-upload-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .file-upload-btn img {
+            margin-right: 10px;
+        }
+
+        .upload-label {
+            font-size: 0.8rem; /* 줄인 글씨 크기 */
+            color: #808080; /* 회색 색상 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form class="form-signup" action="/submit-signup" method="POST">
+            <h2>회원가입</h2>
+            <input type="text" id="name" name="name" class="form-control" placeholder="이름" required autofocus>
+            <input type="email" id="email" name="email" class="form-control" placeholder="이메일" required>
+            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호" required>
+            <input type="text" id="affiliation" name="affiliation" class="form-control" placeholder="소속 대학(선택)" required oninput="checkAffiliation()">
+            <input type="text" id="studentId" name="studentId" class="form-control" placeholder="학번" disabled>
+            <input type="file" id="studentCard" name="studentCard" class="form-control" style="display: none;">
+            <label for="studentCard" class="file-upload-btn">
+                <img src="attach.png" alt="Upload" onclick="document.getElementById('studentCard').click();">
+                <span class="upload-label">※소속 대학, 학번과 일치하는 학생증 첨부시 소속 대학이 인증됩니다.</span>
+            </label>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">가입하기</button>
+        </form>
+    </div>
+
+    <script>
+        function checkAffiliation() {
+            var affiliation = document.getElementById('affiliation').value;
+            var studentId = document.getElementById('studentId');
+            var studentCard = document.getElementById('studentCard');
+            if (affiliation) {
+                studentId.disabled = false;
+                studentCard.disabled = false;
+            } else {
+                studentId.disabled = true;
+                studentCard.disabled = true;
+            }
+        }
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

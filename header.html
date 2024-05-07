@@ -27,8 +27,6 @@
         .nav-table {
             display: flex;
             align-items: center;
-
-
         }
 
         .nav-table a {
@@ -43,9 +41,11 @@
             justify-content: flex-end; /* 오른쪽 정렬 */
         }
 
-        .private-table button {
-            margin: 0 0.1px;
+        .private-table a {
+            margin: 0 5px;
             font-size: 15px;
+            color: white; /* 텍스트 색상 지정 */
+            text-decoration: none; /* 밑줄 제거 */
         }
     </style>
 </head>
@@ -64,9 +64,9 @@
         </div>
 
         <div class="private-table">
-            <button class="btn btn-primary mr-2">알림</button>
-            <button class="btn btn-primary mr-2">쪽지</button>
-            <button class="btn btn-primary mr-auto">로그인</button>
+            <a href="notification.html" class="btn btn-primary mr-2">알림</a>
+            <a href="message.html" class="btn btn-primary mr-2">쪽지</a>
+            <a href="login.html" class="btn btn-primary mr-auto">로그인</a>
         </div>
     </div>
 </body>
