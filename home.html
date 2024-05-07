@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+      /*이하 스타일은 각 클래스별 상세 디자인 내용*/
+
+      .festival { 
+        margin-top: 20px;
+      }
+
+      .festival .poster {
+        width: 100%;
+        height: 200px; /* 원하는 높이로 설정하세요 */
+        object-fit: cover;
+      }
+
+      .festival .school-name {
+        font-weight: bold;
+      }
+
+      .pagination {
+        justify-content: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="header-placeholder"></div>
+    <script>
+        $(function(){
+            $("#header-placeholder").load("header.html");
+        });
+    </script>
+
+
+    <div class="container">
+      <div class="row festival">
+        <!-- 여기에 인기 축제 목록이 들어갈 것입니다. -->
+      </div>
+
+      <!-- 페이지네이션 -->
+      <nav>
+        <ul class="pagination justify-content-center">
+          <!-- 여기에 페이지네이션 버튼이 들어갈 것입니다. -->
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 부트스트랩 및 jQuery 스크립트 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- 스크립트 -->
+    <script>
+      // API에서 인기 축제 데이터를 가져와서 표시하는 함수
+      function fetchPopularFestivals(page) {
+        // 페이지마다 최대 3개의 축제를 가져올 예정
+        const pageSize = 3;
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+
+        // AJAX를 사용하여 API에서 데이터 가져오기
+        $.ajax({
+          url: `http://localhost:8080/festivals/popular`,
+          method: "GET",
+          success: function (data) {
+            // 가져온 데이터를 가공하여 화면에 표시
+            const festivalsContainer = $(".festival");
+            festivalsContainer.empty();
+            for (let i = startIndex; i < endIndex && i < data.length; i++) {
+              const festival = data[i];
+              const festivalDiv = $('<div class="col-md-4 mb-4"></div>');
+              const imageUrl = festival.imageUrl;
+              const schoolName = festival.schoolName;
+              const startDate = festival.startDate;
+              const endDate = festival.endDate;
+
+              // 축제 카드 생성
+              const festivalCard = $(`
+                    <div class="card">
+                        <img class="poster card-img-top" src="${imageUrl}" alt="${schoolName} 축제">
+                        <div class="card-body">
+                            <h5 class="card-title">${schoolName}</h5>
+                            <p class="card-text">기간: ${startDate} ~ ${endDate}</p>
+                        </div>
+                    </div>
+                `);
+
+              // 축제 카드 클릭 시 상세페이지로 이동하는 이벤트 핸들러 추가
+              festivalCard.click(function () {
+                window.location.href = `festival.html?id=${festival.id}`;
+              });
+
+              festivalDiv.append(festivalCard);
+              festivalsContainer.append(festivalDiv);
+            }
+
+            // 페이지네이션 버튼 생성
+            createPaginationButtons(Math.ceil(data.length / pageSize), page);
+          },
+          error: function (xhr, status, error) {
+            console.error("Error fetching popular festivals:", error);
+          },
+        });
+      }
+
+      // 페이지네이션 버튼 생성 함수
+      function createPaginationButtons(totalPages, currentPage) {
+        const paginationContainer = $(".pagination");
+        paginationContainer.empty();
+
+        // 이전 페이지 버튼
+        const prevButton = $(
+          '<li class="page-item"><a class="page-link" href="#" onclick="fetchPopularFestivals(' +
+            (currentPage - 1) +
+            ')">이전</a></li>'
+        );
+        if (currentPage === 1) {
+          prevButton.addClass("disabled");
+        }
+        paginationContainer.append(prevButton);
+
+        // 페이지 버튼
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = $(
+            `<li class="page-item ${
+              currentPage === i ? "active" : ""
+            }"><a class="page-link" href="#" onclick="fetchPopularFestivals(${i})">${i}</a></li>`
+          );
+          paginationContainer.append(pageButton);
+        }
+
+        // 다음 페이지 버튼
+        const nextButton = $(
+          '<li class="page-item"><a class="page-link" href="#" onclick="fetchPopularFestivals(' +
+            (currentPage + 1) +
+            ')">다음</a></li>'
+        );
+        if (currentPage === totalPages) {
+          nextButton.addClass("disabled");
+        }
+        paginationContainer.append(nextButton);
+      }
+
+      // 초기 페이지 로드 시 첫 번째 페이지의 인기 축제 데이터 가져오기
+      fetchPopularFestivals(1);
+    </script>
+  </body>
+</html>

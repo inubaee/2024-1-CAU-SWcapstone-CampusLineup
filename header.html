@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캠퍼스 라인업</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between; /* 요소들을 왼쪽 끝과 오른쪽 끝에 배치 */
+            align-items: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            font-size: 24px;
+        }
+
+        .logo {
+            max-width: 150px; /* 로고의 최대 너비를 150px로 지정 */
+            max-height: 50px; /* 로고의 최대 높이를 50px로 지정 */
+            margin-right: 10px; /* 로고와 텍스트 사이의 간격 조절 */
+            align-self: center; /* 로고를 수직으로 가운데 정렬 */
+        }
+
+
+        .nav-table {
+            display: flex;
+            align-items: center;
+
+
+        }
+
+        .nav-table a {
+            color: white;
+            margin: 0 5px;
+            font-size: 24px;
+        }
+
+        .private-table {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* 오른쪽 정렬 */
+        }
+
+        .private-table button {
+            margin: 0 0.1px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="home.html">
+            <img src="logo.png" class="logo">
+        </a>
+
+        <div class="nav-table">
+            <a href="home.html" class="btn btn-primary">홈</a>
+            <a href="community.html" class="btn btn-primary">커뮤니티</a>
+            <a href="search.html" class="btn btn-primary">축제 검색</a>
+            <a href="rank.html" class="btn btn-primary">축제 랭킹</a>  
+        </div>
+
+        <div class="private-table">
+            <button class="btn btn-primary mr-2">알림</button>
+            <button class="btn btn-primary mr-2">쪽지</button>
+            <button class="btn btn-primary mr-auto">로그인</button>
+        </div>
+    </div>
+</body>
+</html>

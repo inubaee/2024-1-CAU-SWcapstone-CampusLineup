@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티케팅</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-ticket {
+            max-width: 600px;
+            padding: 15px;
+            margin: 20px auto;
+            background-color: white;
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form class="form-ticket">
+            <div class="form-group">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" id="title" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="location" class="form-label">장소</label>
+                <input type="text" id="location" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="date" class="form-label">일시</label>
+                <input type="text" id="date" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="time" class="form-label">시간</label>
+                <input type="text" id="time" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="artist" class="form-label">아티스트</label>
+                <input type="text" id="artist" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="remainingTickets" class="form-label">잔여표</label>
+                <input type="text" id="remainingTickets" class="form-control" placeholder="">
+            </div>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

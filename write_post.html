@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 0;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+        margin-top: 20px; /* 헤더와 폼 사이에 20px의 마진 추가 */
+        }
+
+
+        .form-write {
+            max-width: 600px;
+            padding: 15px;
+            margin: 0 auto;
+            background-color: white;
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+
+        .form-write input,
+        .form-write select,
+        .form-write textarea {
+            margin-bottom: 15px; /* 각 입력 필드 및 드롭다운의 하단에 15px의 마진 추가 */
+        }
+
+        .custom-file-upload {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .custom-file-upload img {
+            cursor: pointer;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            $("#header-placeholder").load("header.html");
+        });
+    </script>
+    
+    <div class="container">
+        <form class="form-write" action="/post-article" method="POST" enctype="multipart/form-data">
+            <select name="category" class="form-control" required>
+                <option value="Free_Board">자유 게시판</option>
+                <option value="Finding_Friend">동행 찾기</option>
+                <option value="Festival_Review">축제 후기</option>
+            </select>
+            <input type="text" id="title" name="title" class="form-control" placeholder="제목" required autofocus>
+            <textarea id="content" name="content" class="form-control" placeholder="내용을 입력하세요" required rows="8"></textarea>
+            <div class="custom-file-upload">
+                <input type="file" id="file" name="photo" style="display: none;">
+                <img src="attach.png" alt="Upload" onclick="document.getElementById('file').click();">
+                <span id="file-name"></span>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">게시하기</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('file').addEventListener('change', function() {
+            var fileName = this.value.split('\\').pop();
+            document.getElementById('file-name').textContent = fileName; // 파일 이름 표시
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

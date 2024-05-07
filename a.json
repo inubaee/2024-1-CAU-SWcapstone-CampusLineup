@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "school": {
+    "id": 1,
+    "name": "중앙대학교",
+    "location": "서울",
+    "instagram": null
+  },
+  "season": "2024년 봄축제",
+  "startDate": "2024-05-16",
+  "endDate": "2024-05-18",
+  "imageUrl": "https://image.png",
+  "viewCount": 62,
+  "lineUps": [
+    {
+      "startTime": "2024-05-17T18:00:00",
+      "artists": [
+        {
+          "id": 1,
+          "name": "뉴진스",
+          "imageUrl": "https://image.png"
+        }
+      ]
+    }
+  ]
+}
