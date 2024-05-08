@@ -8,15 +8,9 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <style>
-      /* 추가적인 CSS 스타일링 */
-      .header {
-        background-color:  #007bff;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        font-size: 24px;
-      }
       .main{/* 이거 왜 안되냐???????? */
         display: flex;
         justify-content: center;
@@ -70,13 +64,13 @@
     </style>
   </head>
   <body>
-    <header>
-        <div class="header">
-        <div>
-            <h3><a href = "index.html" style = "color : white">캠퍼스 라인업</a></h3>
-        </div>
-        </div>
-    </header>
+    <div id="header-placeholder"></div>
+    <script>
+        $(function(){
+            $("#header-placeholder").load("header.html");
+        });
+    </script>
+
     <main>
         <div class="user-info">
             <p><h2>홍길동님</h2></p>
