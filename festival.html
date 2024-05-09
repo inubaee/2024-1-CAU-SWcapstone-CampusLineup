@@ -6,22 +6,9 @@
     <title>축제 상세 정보</title>
     <link
       rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-      /* 추가적인 CSS 스타일링 */
-      .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: #007bff;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        font-size: 24px;
-      }
-
       .poster {
         width: 400px; /* 최대 너비 */
         height: 400px; /* 최대 높이 */
@@ -89,7 +76,7 @@
 
       async function fetchFestivalDetails(id) {
         try {
-          const response = await fetch(`http://localhost:8080/festivals/${id}`);
+          const response = await fetch(`http://13.54.47.248:8080/festivals/${id}`);
           const festival = await response.json();
           displayFestivalDetails(festival);
         } catch (error) {

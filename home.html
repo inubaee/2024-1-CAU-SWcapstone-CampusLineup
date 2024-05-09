@@ -9,8 +9,6 @@
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-      /*이하 스타일은 각 클래스별 상세 디자인 내용*/
-
       .festival { 
         margin-top: 20px;
       }
@@ -70,7 +68,7 @@
 
         // AJAX를 사용하여 API에서 데이터 가져오기
         $.ajax({
-          url: `http://localhost:8080/festivals/popular`,
+          url: `http://13.54.47.248:8080/festivals/popular`,
           method: "GET",
           success: function (data) {
             // 가져온 데이터를 가공하여 화면에 표시

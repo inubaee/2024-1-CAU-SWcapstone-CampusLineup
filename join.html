@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         body {
-            padding-top: 40px;
+            padding-top: 0;
             padding-bottom: 40px;
             background-color: #f5f5f5;
         }
@@ -49,6 +50,13 @@
     </style>
 </head>
 <body>
+    <div id="header-placeholder"></div>
+    <script>
+        $(function(){
+            $("#header-placeholder").load("header.html");
+        });
+    </script>
+
     <div class="container">
         <form class="form-signup" action="/submit-signup" method="POST">
             <h2>회원가입</h2>
