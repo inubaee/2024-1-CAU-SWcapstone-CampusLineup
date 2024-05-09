@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>인기축제순위</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+      .main{/* 이거 왜 안되냐???????? */
+        display: flex;
+        justify-content: center;
+        align-items: center; /* 추가: 세로 중앙 정렬 */
+        height: 100vh; /* 추가: 화면 전체 높이를 차지하도록 설정 */
+        margin: 0; /* 추가: 기본 마진 제거 */
+      }
+      .a{
+        text-decoration-line: none;
+      }
+      a:link {
+        text-decoration: none;
+      }
+      a:visited {
+        text-decoration: none;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-around; /* 버튼들을 가로로 고르게 배치합니다. */
+        margin-top: 20px; /* 위쪽 여백을 추가합니다. */
+      }
+      .button-container button {
+        padding: 50px 50px; /* 버튼의 패딩을 조정합니다. */
+        font-size: 30px; /* 버튼의 글꼴 크기를 조정합니다. */
+        border: none; /* 버튼의 테두리를 없앱니다. */
+        border-radius: 25px; /* 버튼의 모서리를 둥글게 만듭니다. */
+        color: white;
+      }
+      
+      .button-container button:hover {
+        opacity: 0.8;
+        cursor: pointer; /* 마우스를 올렸을 때 커서를 포인터로 변경합니다. */
+      }
+
+      .pagination {
+        justify-content: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="header-placeholder"></div>
+    <script>
+        $(function(){
+            $("#header-placeholder").load("header.html");
+        });
+
+        function showAdditionalFestivals() {
+            document.getElementById("additionalFestivals").style.display = "block";
+        }
+        function toggleAdditionalFestivals() {
+            var additionalFestivals = document.getElementById("additionalFestivals");
+            var toggleButton = document.getElementById("toggleButton");
+    
+            if (additionalFestivals.style.display === "none") {
+                additionalFestivals.style.display = "block";
+                toggleButton.textContent = "접기";
+            } else {
+                additionalFestivals.style.display = "none";
+                toggleButton.textContent = "더보기";
+            }
+        }
+        
+    </script>
+
+    <main>
+        <div class="container">
+            <h2 class="text-center">인기축제 한눈에 모아보기</h2>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <img src="축제1.jpg" alt="축제1 포스터" class="img-fluid">
+                        <p class="mt-2">1위: 중앙대</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <img src="축제2.jpg" alt="축제2 포스터" class="img-fluid">
+                        <p class="mt-2">2위: 한양대</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <img src="축제3.jpg" alt="축제3 포스터" class="img-fluid">
+                        <p class="mt-2">3위: 연세대</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <img src="축제4.jpg" alt="축제4 포스터" class="img-fluid">
+                        <p class="mt-2">4위: 고려대</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <img src="축제5.jpg" alt="축제5 포스터" class="img-fluid">
+                        <p class="mt-2">5위: 경희대</p>
+                    </div>
+                </div>
+            </div>
+            <div id="additionalFestivals" style="display: none;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="text-center">
+                            <img src="축제6.jpg" alt="축제6 포스터" class="img-fluid">
+                            <p class="mt-2">6위: 서강대</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center">
+                            <img src="축제7.jpg" alt="축제7 포스터" class="img-fluid">
+                            <p class="mt-2">7위: 서울대</p>
+                        </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+            <div class="text-center mt-3">
+                <button id="toggleButton" class="btn btn-primary" onclick="toggleAdditionalFestivals()">더보기</button>
+            </div>
+        </div>
+    </main>
+    <aside>
+        <div class="container">
+            <h2>축제 상세 정보</h2>
+            <div>
+                <h3>축제 1</h3>
+                <p>날짜: 2024년 5월 15일 - 17일</p>
+                <p>장소: 서울</p>
+                <p>주요 아티스트: 뉴진스, 뷰티플너드</p>
+            </div>
+            <div>
+                <h3>축제 2</h3>
+                <p>날짜: 2024년 5월 20일 - 22일</p>
+                <p>장소: 부산</p>
+                <p>주요 아티스트: 악동뮤지션, 싸이, 블랙핑크</p>
+            </div>
+            <div>
+                <h3>축제 3</h3>
+                <p>날짜: 2024년 5월 10일 - 12일</p>
+                <p>장소: 제주도</p>
+                <p>주요 아티스트: 박재범, 잔나비</p>
+            </div>
+        </div>
+    </aside>
+    <footer>
+        <p>&copy; 캠퍼스라인업 <a href="#">약관 및 정책</a> </p>
+    </footer>
+  </body>
+</html>
