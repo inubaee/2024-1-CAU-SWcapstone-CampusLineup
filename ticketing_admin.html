@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>티켓 발매</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <script>
+    $(function(){
+        $("#header-placeholder").load("header.html");
+    });
+  </script>
+
+  <div class="container">
+    <h2>티켓 발매</h2>
+    <form id="ticketForm">
+      <div class="form-group">
+        <label for="eventName">행사 이름</label>
+        <input type="text" class="form-control" id="eventName" required>
+      </div>
+      <div class="form-group">
+        <label for="location">장소</label>
+        <input type="text" class="form-control" id="location" required>
+      </div>
+      <div class="form-group">
+        <label for="datetime">일시</label>
+        <input type="datetime-local" class="form-control" id="datetime" required>
+      </div>
+      <div class="form-group">
+        <label for="description">상세 소개</label>
+        <textarea class="form-control" id="description" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="remainingTickets">잔여표</label>
+        <input type="number" class="form-control" id="remainingTickets" required>
+      </div>
+      <button type="submit" class="btn btn-primary">발매하기</button>
+    </form>
+  </div>
+
+  <script>
+    $('#ticketForm').on('submit', function(event) {
+      event.preventDefault();
+      // 여기에 티켓 정보를 서버에 보내는 코드를 작성합니다.
+      alert('티켓이 발매되었습니다.');
+    });
+  </script>
+</body>
+</html>

@@ -1,72 +1,98 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>티케팅</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
-        }
-
-        .form-ticket {
-            max-width: 600px;
-            padding: 15px;
-            margin: 20px auto;
-            background-color: white;
-            border: 1px solid #e3e3e3;
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.05);
-        }
-
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        .form-label {
-            font-weight: bold;
-        }
-
-        .form-control {
-            width: 100%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>티켓팅 페이지</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ticket {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .open-ticket-btn {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <form class="form-ticket">
-            <div class="form-group">
-                <label for="title" class="form-label">제목</label>
-                <input type="text" id="title" class="form-control" placeholder="">
-            </div>
-            <div class="form-group">
-                <label for="location" class="form-label">장소</label>
-                <input type="text" id="location" class="form-control" placeholder="">
-            </div>
-            <div class="form-group">
-                <label for="date" class="form-label">일시</label>
-                <input type="text" id="date" class="form-control" placeholder="">
-            </div>
-            <div class="form-group">
-                <label for="time" class="form-label">시간</label>
-                <input type="text" id="time" class="form-control" placeholder="">
-            </div>
-            <div class="form-group">
-                <label for="artist" class="form-label">아티스트</label>
-                <input type="text" id="artist" class="form-control" placeholder="">
-            </div>
-            <div class="form-group">
-                <label for="remainingTickets" class="form-label">잔여표</label>
-                <input type="text" id="remainingTickets" class="form-control" placeholder="">
-            </div>
-        </form>
-    </div>
+  <div id="header-placeholder"></div>
+  <script>
+    $(function(){
+        $("#header-placeholder").load("header.html");
+    });
+  </script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <div class="container">
+    <div class="header-container">
+      <h2>현재 티켓팅 중인 행사</h2>
+      <a href="ticketing_admin.html" class="btn btn-success open-ticket-btn">티켓 오픈</a> <!-- 티켓 오픈 버튼 -->
+    </div>
+    <div id="ticketsContainer">
+      <!-- 티켓 정보가 여기에 동적으로 추가됩니다. -->
+    </div>
+  </div>
+
+  <script>
+    const tickets = [
+      {
+        id: 1,
+        eventName: "축제 A",
+        location: "서울",
+        datetime: "2024-06-01T18:00",
+        description: "축제 A에 대한 상세 소개",
+        remainingTickets: 50,
+        totalTickets: 50
+      },
+      {
+        id: 2,
+        eventName: "축제 B",
+        location: "부산",
+        datetime: "2024-07-15T20:00",
+        description: "축제 B에 대한 상세 소개",
+        remainingTickets: 30,
+        totalTickets: 30
+      }
+    ];
+
+    $(document).ready(function() {
+      const ticketsContainer = $('#ticketsContainer');
+
+      tickets.forEach(ticket => {
+        const ticketElement = `
+          <div class="ticket">
+            <h3>${ticket.eventName}</h3>
+            <p>장소: ${ticket.location}</p>
+            <p>일시: ${new Date(ticket.datetime).toLocaleString()}</p>
+            <p>${ticket.description}</p>
+            <p>잔여표: <span id="remaining-${ticket.id}">${ticket.remainingTickets}/${ticket.totalTickets}</span></p>
+            <button class="btn btn-primary" onclick="bookTicket(${ticket.id})">티켓팅</button>
+          </div>
+        `;
+        ticketsContainer.append(ticketElement);
+      });
+    });
+
+    function bookTicket(id) {
+      const ticket = tickets.find(t => t.id === id);
+      if (ticket && ticket.remainingTickets > 0) {
+        ticket.remainingTickets--;
+        document.getElementById(`remaining-${ticket.id}`).textContent = `${ticket.remainingTickets}/${ticket.totalTickets}`;
+        alert(`${ticket.eventName} 티켓팅이 완료되었습니다.`);
+      } else {
+        alert('잔여표가 없습니다.');
+      }
+    }
+  </script>
 </body>
 </html>
