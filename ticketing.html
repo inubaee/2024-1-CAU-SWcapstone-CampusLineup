@@ -44,57 +44,62 @@
   </div>
 
   <script>
-    const tickets = [
-      {
-        id: 1,
-        eventName: "축제 A",
-        location: "서울",
-        startDatetime: "2024-06-01T18:00",
-        endDatetime: "2024-06-01T22:00",
-        description: "축제 A에 대한 상세 소개",
-        remainingTickets: 50,
-        totalTickets: 50
-      },
-      {
-        id: 2,
-        eventName: "축제 B",
-        location: "부산",
-        startDatetime: "2024-07-15T20:00",
-        endDatetime: "2024-07-15T23:00",
-        description: "축제 B에 대한 상세 소개",
-        remainingTickets: 30,
-        totalTickets: 30
+    async function fetchTickets() {
+      try {
+        const response = await fetch('http://13.54.47.248:8080/ticketing');
+        const tickets = await response.json();
+        displayTickets(tickets);
+      } catch (error) {
+        console.error('Error fetching tickets:', error);
       }
-    ];
+    }
 
-    $(document).ready(function() {
+    function displayTickets(tickets) {
       const ticketsContainer = $('#ticketsContainer');
+      ticketsContainer.empty();
 
       tickets.forEach(ticket => {
         const ticketElement = `
           <div class="ticket">
-            <h3>${ticket.eventName}</h3>
+            <h3>${ticket.title}</h3>
             <p>장소: ${ticket.location}</p>
-            <p>기간: ${new Date(ticket.startDatetime).toLocaleString()} - ${new Date(ticket.endDatetime).toLocaleString()}</p>
+            <p>기간: ${new Date(ticket.ticketOpenTime).toLocaleString()} - ${new Date(ticket.ticketCloseTime).toLocaleString()}</p>
             <p>${ticket.description}</p>
-            <p>잔여표: <span id="remaining-${ticket.id}">${ticket.remainingTickets}/${ticket.totalTickets}</span></p>
+            <p>잔여표: <span id="remaining-${ticket.id}">${ticket.remainAmount}/${ticket.totalAmount}</span></p>
             <button class="btn btn-primary" onclick="bookTicket(${ticket.id})">티켓팅</button>
           </div>
         `;
         ticketsContainer.append(ticketElement);
       });
-    });
+    }
 
-    function bookTicket(id) {
-      const ticket = tickets.find(t => t.id === id);
-      if (ticket && ticket.remainingTickets > 0) {
-        ticket.remainingTickets--;
-        document.getElementById(`remaining-${ticket.id}`).textContent = `${ticket.remainingTickets}/${ticket.totalTickets}`;
-        alert(`${ticket.eventName} 티켓팅이 완료되었습니다.`);
-      } else {
-        alert('잔여표가 없습니다.');
+    async function bookTicket(id) {
+      try {
+        const response = await fetch(`http://13.54.47.248:8080/ticketing/${id}/reserve`, {
+          method: 'POST'
+        });
+
+        if (response.ok) {
+          const ticket = tickets.find(t => t.id === id);
+          if (ticket && ticket.remainAmount > 0) {
+            ticket.remainAmount--;
+            document.getElementById(`remaining-${ticket.id}`).textContent = `${ticket.remainAmount}/${ticket.totalAmount}`;
+            alert(`${ticket.title} 티켓팅이 완료되었습니다.`);
+          } else {
+            alert('잔여표가 없습니다.');
+          }
+        } else {
+          alert('티켓팅에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('Error booking ticket:', error);
+        alert('티켓팅 중 오류가 발생했습니다.');
       }
     }
+
+    // 초기 페이지 로드 시 티켓 목록 가져오기
+    $(document).ready(fetchTickets);
   </script>
 </body>
 </html>
+

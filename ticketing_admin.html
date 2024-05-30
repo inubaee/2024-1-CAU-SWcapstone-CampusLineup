@@ -56,17 +56,18 @@
       event.preventDefault();
 
       const ticketData = {
-        eventName: $('#eventName').val(),
+        openUserId: 1, // Replace with actual user ID
+        totalAmount: $('#remainingTickets').val(),
+        ticketOpenTime: $('#startDatetime').val(),
+        ticketCloseTime: $('#endDatetime').val(),
+        eventTime: $('#startDatetime').val(), // Assuming eventTime is the start time
+        title: $('#eventName').val(),
         location: $('#location').val(),
-        startDatetime: $('#startDatetime').val(),
-        endDatetime: $('#endDatetime').val(),
-        description: $('#description').val(),
-        totalTickets: $('#remainingTickets').val(),
-        remainingTickets: $('#remainingTickets').val()
+        description: $('#description').val()
       };
 
       try {
-        const response = await fetch('/api/tickets', {
+        const response = await fetch('http://13.54.47.248:8080/ticketing', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -75,13 +76,14 @@
         });
 
         if (response.ok) {
-          alert('티켓이 발매되었습니다.');
+          alert('티켓이 오픈되었습니다.');
+          window.location.href = 'ticketing.html'; // 티켓팅 페이지로 이동
         } else {
-          alert('티켓 발매에 실패했습니다.');
+          alert('티켓 오픈에 실패했습니다.');
         }
       } catch (error) {
         console.error('Error creating ticket:', error);
-        alert('티켓 발매 중 오류가 발생했습니다.');
+        alert('티켓 오픈 중 오류가 발생했습니다.');
       }
     });
   </script>
