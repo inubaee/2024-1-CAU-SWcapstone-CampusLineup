@@ -10,6 +10,16 @@
     .container {
       margin-top: 50px;
     }
+    .form-group-half {
+      width: 100%;
+    }
+    .form-container {
+      display: flex;
+      justify-content: center;
+    }
+    .form-content {
+      width: 50%;
+    }
   </style>
 </head>
 <body>
@@ -21,34 +31,36 @@
   </script>
 
   <div class="container">
-    <h2>티켓 오픈</h2>
-    <form id="ticketForm">
-      <div class="form-group">
-        <label for="eventName">행사 이름</label>
-        <input type="text" class="form-control" id="eventName" required>
-      </div>
-      <div class="form-group">
-        <label for="location">장소</label>
-        <input type="text" class="form-control" id="location" required>
-      </div>
-      <div class="form-group">
-        <label for="startDatetime">시작 일시</label>
-        <input type="datetime-local" class="form-control" id="startDatetime" required>
-      </div>
-      <div class="form-group">
-        <label for="endDatetime">종료 일시</label>
-        <input type="datetime-local" class="form-control" id="endDatetime" required>
-      </div>
-      <div class="form-group">
-        <label for="description">상세 소개</label>
-        <textarea class="form-control" id="description" rows="3" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="remainingTickets">잔여표</label>
-        <input type="number" class="form-control" id="remainingTickets" required>
-      </div>
-      <button type="submit" class="btn btn-primary">오픈하기</button>
-    </form>
+    <h2 class="text-center">티켓 오픈</h2>
+    <div class="form-container">
+      <form id="ticketForm" class="form-content">
+        <div class="form-group form-group-half">
+          <label for="eventName">행사 이름</label>
+          <input type="text" class="form-control" id="eventName" required>
+        </div>
+        <div class="form-group form-group-half">
+          <label for="location">장소</label>
+          <input type="text" class="form-control" id="location" required>
+        </div>
+        <div class="form-group form-group-half">
+          <label for="startDatetime">시작 일시</label>
+          <input type="datetime-local" class="form-control" id="startDatetime" required step="60">
+        </div>
+        <div class="form-group form-group-half">
+          <label for="endDatetime">종료 일시</label>
+          <input type="datetime-local" class="form-control" id="endDatetime" required step="60">
+        </div>
+        <div class="form-group form-group-half">
+          <label for="description">상세 소개</label>
+          <textarea class="form-control" id="description" rows="3" required></textarea>
+        </div>
+        <div class="form-group form-group-half">
+          <label for="remainingTickets">잔여표</label>
+          <input type="number" class="form-control" id="remainingTickets" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">오픈하기</button>
+      </form>
+    </div>
   </div>
 
   <script>
