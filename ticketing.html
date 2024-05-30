@@ -49,7 +49,8 @@
         id: 1,
         eventName: "축제 A",
         location: "서울",
-        datetime: "2024-06-01T18:00",
+        startDatetime: "2024-06-01T18:00",
+        endDatetime: "2024-06-01T22:00",
         description: "축제 A에 대한 상세 소개",
         remainingTickets: 50,
         totalTickets: 50
@@ -58,7 +59,8 @@
         id: 2,
         eventName: "축제 B",
         location: "부산",
-        datetime: "2024-07-15T20:00",
+        startDatetime: "2024-07-15T20:00",
+        endDatetime: "2024-07-15T23:00",
         description: "축제 B에 대한 상세 소개",
         remainingTickets: 30,
         totalTickets: 30
@@ -73,7 +75,7 @@
           <div class="ticket">
             <h3>${ticket.eventName}</h3>
             <p>장소: ${ticket.location}</p>
-            <p>일시: ${new Date(ticket.datetime).toLocaleString()}</p>
+            <p>기간: ${new Date(ticket.startDatetime).toLocaleString()} - ${new Date(ticket.endDatetime).toLocaleString()}</p>
             <p>${ticket.description}</p>
             <p>잔여표: <span id="remaining-${ticket.id}">${ticket.remainingTickets}/${ticket.totalTickets}</span></p>
             <button class="btn btn-primary" onclick="bookTicket(${ticket.id})">티켓팅</button>

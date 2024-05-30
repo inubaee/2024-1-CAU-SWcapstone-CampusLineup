@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>티켓 발매</title>
+  <title>티켓 오픈</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <style>
@@ -21,7 +21,7 @@
   </script>
 
   <div class="container">
-    <h2>티켓 발매</h2>
+    <h2>티켓 오픈</h2>
     <form id="ticketForm">
       <div class="form-group">
         <label for="eventName">행사 이름</label>
@@ -32,8 +32,12 @@
         <input type="text" class="form-control" id="location" required>
       </div>
       <div class="form-group">
-        <label for="datetime">일시</label>
-        <input type="datetime-local" class="form-control" id="datetime" required>
+        <label for="startDatetime">시작 일시</label>
+        <input type="datetime-local" class="form-control" id="startDatetime" required>
+      </div>
+      <div class="form-group">
+        <label for="endDatetime">종료 일시</label>
+        <input type="datetime-local" class="form-control" id="endDatetime" required>
       </div>
       <div class="form-group">
         <label for="description">상세 소개</label>
@@ -43,15 +47,42 @@
         <label for="remainingTickets">잔여표</label>
         <input type="number" class="form-control" id="remainingTickets" required>
       </div>
-      <button type="submit" class="btn btn-primary">발매하기</button>
+      <button type="submit" class="btn btn-primary">오픈하기</button>
     </form>
   </div>
 
   <script>
-    $('#ticketForm').on('submit', function(event) {
+    $('#ticketForm').on('submit', async function(event) {
       event.preventDefault();
-      // 여기에 티켓 정보를 서버에 보내는 코드를 작성합니다.
-      alert('티켓이 발매되었습니다.');
+
+      const ticketData = {
+        eventName: $('#eventName').val(),
+        location: $('#location').val(),
+        startDatetime: $('#startDatetime').val(),
+        endDatetime: $('#endDatetime').val(),
+        description: $('#description').val(),
+        totalTickets: $('#remainingTickets').val(),
+        remainingTickets: $('#remainingTickets').val()
+      };
+
+      try {
+        const response = await fetch('/api/tickets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(ticketData)
+        });
+
+        if (response.ok) {
+          alert('티켓이 발매되었습니다.');
+        } else {
+          alert('티켓 발매에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('Error creating ticket:', error);
+        alert('티켓 발매 중 오류가 발생했습니다.');
+      }
     });
   </script>
 </body>
