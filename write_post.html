@@ -55,7 +55,7 @@
     </script>
     
     <div class="container">
-        <form class="form-write" action="/post-article" method="POST" enctype="multipart/form-data">
+        <form id="writeForm" class="form-write">
             <select name="category" class="form-control" required>
                 <option value="Free_Board">자유 게시판</option>
                 <option value="Finding_Friend">동행 찾기</option>
@@ -77,6 +77,34 @@
             var fileName = this.value.split('\\').pop();
             document.getElementById('file-name').textContent = fileName; // 파일 이름 표시
         });
+
+        //여기부터 새로추가
+        $('#writeForm').submit(function(event) {
+            event.preventDefault(); // 기본 폼 제출을 막음
+    
+            const postData = {
+                userId: 0, // 실제 사용자 ID를 여기에 설정해야 합니다.
+                category: $('select[name="category"]').val(),
+                title: $('#title').val(),
+                description: $('#content').val()
+            };
+    
+            $.ajax({
+                url: 'http://13.54.47.248:8080/posting',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(postData),
+                success: function(response) {
+                    alert('게시글이 등록되었습니다.');
+                    window.location.href = 'community.html'; // 등록 후 커뮤니티 페이지로 이동
+                },
+                error: function(xhr, status, error) {
+                    const errorMsg = '게시글 등록 중 오류가 발생했습니다. 에러 내용: ' + xhr.responseText;
+                    $('body').append('<div class="alert alert-danger" role="alert">' + errorMsg + '</div>');
+                }
+            });
+        });
+        //이까지
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
