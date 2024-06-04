@@ -59,15 +59,31 @@
             <a href="home.html" class="btn btn-primary">홈</a>
             <a href="community.html" class="btn btn-primary">커뮤니티</a>
             <a href="search.html" class="btn btn-primary">축제 검색</a>
-            <a href="rank.html" class="btn btn-primary">축제 랭킹</a>  
+            <a href="rank.html" class="btn btn-primary">인기 축제 순위</a>  
             <a href="ticketing.html" class="btn btn-primary">티켓팅</a> <!-- 티켓팅 탭 수정 -->
         </div>
 
         <div class="private-table">
             <a href="notification.html" class="btn btn-primary mr-2">알림</a>
             <a href="message.html" class="btn btn-primary mr-2">쪽지</a>
-            <a href="login.html" class="btn btn-primary mr-auto">로그인</a>
+            <a href="login.html" id="loginButton" class="btn btn-primary mr-auto">로그인</a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log('DOMContentLoaded event triggered'); // 이벤트 실행 확인
+            const loginButton = document.getElementById('loginButton');
+            const user = JSON.parse(localStorage.getItem('user'));
+            console.log('User from localStorage:', user); // 로컬 스토리지 데이터 확인
+
+            if (user && user.name) {
+                console.log('Updating login button text to:', user.name); // 업데이트 확인
+                loginButton.textContent = user.name;
+                console.log('Login button text updated to:', loginButton.textContent); // 버튼 텍스트 확인
+                loginButton.href = 'mypage.html';
+            }
+        });
+    </script>
 </body>
 </html>

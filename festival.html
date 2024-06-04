@@ -33,14 +33,25 @@
         padding: 5px 10px;
         border-radius: 5px;
       }
+
+      .ticket-button {
+        margin-top: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .ticket-button:hover {
+        background-color: #0056b3;
+      }
     </style>
   </head>
   <div id="header-placeholder"></div>
-  <script>
-      $(function(){
-          $("#header-placeholder").load("header.html");
-      });
-  </script>
+  <script src="common.js"></script>
+
 
   <body>
 
@@ -64,6 +75,9 @@
       <div class="lineup mt-4" id="lineupContainer">
         <h4>아티스트 라인업</h4>
       </div>
+
+      <!-- 티케팅 버튼 -->
+      <button class="ticket-button" id="ticketButton">현재 티케팅 중인 행사 바로가기</button>
     </div>
 
     <script>
@@ -138,6 +152,11 @@
           lineupHtml += "</div>";
           lineupContainer.insertAdjacentHTML("beforeend", lineupHtml);
         });
+
+        // 티케팅 버튼 클릭 시 이벤트 설정
+        document.querySelector("#ticketButton").onclick = function() {
+          window.location.href = `ticketing.html?search=${festival.school.name}`;
+        };
       }
 
       // 요일 구하는 함수

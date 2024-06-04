@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티켓 예약 목록</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .reservation {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script src="common.js"></script>
+
+    <div class="container">
+        <h2>예약한 티켓 목록</h2>
+        <div id="reservationsContainer">
+            <!-- 예약한 티켓 정보가 여기에 동적으로 추가됩니다. -->
+        </div>
+    </div>
+
+    <script>
+        async function fetchReservations() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.id) {
+                alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://13.54.47.248:8080/ticketing/reserve?userId=${user.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${user.token}` // 사용자 토큰 사용
+                    }
+                });
+                const reservations = await response.json();
+                console.log('Fetched reservations:', reservations); // 응답 데이터 출력
+                displayReservations(reservations);
+            } catch (error) {
+                console.error('Error fetching reservations:', error);
+            }
+        }
+
+        function displayReservations(reservations) {
+            const reservationsContainer = $('#reservationsContainer');
+            reservationsContainer.empty();
+
+            reservations.forEach(reservation => {
+                if (reservation.ticketing) {
+                    console.log('Reservation ticketing data:', reservation.ticketing); // ticketing 데이터 출력
+                    const schoolName = reservation.ticketing.school ? reservation.ticketing.school.name : 'Unknown School';
+                    const reservationElement = `
+                        <div class="reservation">
+                            <h3>${reservation.ticketing.title}</h3>
+                            <p>학교: ${schoolName}</p>
+                            <p>장소: ${reservation.ticketing.location}</p>
+                            <p>기간: ${new Date(reservation.ticketing.ticketOpenTime).toLocaleString()} - ${new Date(reservation.ticketing.ticketCloseTime).toLocaleString()}</p>
+                            <p>${reservation.ticketing.description}</p>
+                        </div>
+                    `;
+                    reservationsContainer.append(reservationElement);
+                } else {
+                    console.warn('Invalid reservation data:', reservation);
+                }
+            });
+        }
+
+        // 초기 페이지 로드 시 예약 목록 가져오기
+        $(document).ready(fetchReservations);
+    </script>
+</body>
+</html>

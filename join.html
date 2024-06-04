@@ -5,92 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         body {
-            padding-top: 0;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
         }
-
-        .form-signup {
-            max-width: 400px;
-            padding: 15px;
-            margin: 20px auto;
-            background-color: white;
-            border: 1px solid #e3e3e3;
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.05);
-        }
-
-        .form-signup h2 {
-        text-align: center; /* 타이틀을 중앙에 배치 */
-        margin-bottom: 10px; /* 타이틀과 다음 필드 사이의 간격 */
-        }
-
-        .form-control {
-            margin-bottom: 15px;
-        }
-
-        .file-upload-btn {
+        .join-container {
+            height: calc(100vh - 70px); /* 헤더 높이를 뺀 높이 */
             display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            cursor: pointer;
+            margin-top: -100px; /* 헤더와의 간격 조정 */
         }
-
-        .file-upload-btn img {
-            margin-right: 10px;
+        .form-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-        .upload-label {
-            font-size: 0.8rem; /* 줄인 글씨 크기 */
-            color: #808080; /* 회색 색상 */
-        }
-
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <script>
-        $(function(){
-            $("#header-placeholder").load("header.html");
-        });
-    </script>
-
-    <div class="container">
-        <form class="form-signup" action="/submit-signup" method="POST">
-            <h2>회원가입</h2>
-            <input type="text" id="name" name="name" class="form-control" placeholder="이름" required autofocus>
-            <input type="email" id="email" name="email" class="form-control" placeholder="이메일" required>
-            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호" required>
-            <input type="text" id="affiliation" name="affiliation" class="form-control" placeholder="소속 대학(선택)" required oninput="checkAffiliation()">
-            <input type="text" id="studentId" name="studentId" class="form-control" placeholder="학번" disabled>
-            <input type="file" id="studentCard" name="studentCard" class="form-control" style="display: none;">
-            <label for="studentCard" class="file-upload-btn">
-                <img src="attach.png" alt="Upload" onclick="document.getElementById('studentCard').click();">
-                <span class="upload-label">※소속 대학, 학번과 일치하는 학생증 첨부시, 검토 후 소속 대학이 인증됩니다.</span>
-            </label>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">가입하기</button>
-        </form>
+    <script src="common.js"></script>
+    
+    <div class="join-container">
+        <div class="form-container">
+            <h2 class="text-center">회원가입</h2>
+            <form id="joinForm">
+                <div class="form-group">
+                    <label for="name">닉네임</label>
+                    <input type="text" class="form-control" id="name" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <div class="input-group">
+                        <input type="email" class="form-control" id="email" autocomplete="email" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="button" id="checkEmailDuplication">중복 확인</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" class="form-control" id="password" autocomplete="new-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="verificationCode">인증번호</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="verificationCode" autocomplete="one-time-code" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="button" id="requestVerificationCode">인증 요청</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">가입하기</button>
+            </form>
+        </div>
     </div>
 
-    <script>
-        function checkAffiliation() {
-            var affiliation = document.getElementById('affiliation').value;
-            var studentId = document.getElementById('studentId');
-            var studentCard = document.getElementById('studentCard');
-            if (affiliation) {
-                studentId.disabled = false;
-                studentCard.disabled = false;
-            } else {
-                studentId.disabled = true;
-                studentCard.disabled = true;
-            }
-        }
-    </script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#checkEmailDuplication').on('click', async function() {
+            const email = $('#email').val();
+            if (!email) {
+                alert('이메일을 입력해주세요.');
+                return;
+            }
+            try {
+                const response = await fetch(`http://13.54.47.248:8080/auth/id-check/${email}`, {
+                    method: 'GET'
+                });
+                const result = await response.json();
+                if (result.canUse) {
+                    alert('사용 가능한 이메일입니다.');
+                } else {
+                    alert('이미 사용 중인 이메일입니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('이메일 중복 확인 중 오류가 발생했습니다.');
+            }
+        });
+
+        $('#requestVerificationCode').on('click', async function() {
+            const email = $('#email').val();
+            if (!email) {
+                alert('이메일을 입력해주세요.');
+                return;
+            }
+            try {
+                const response = await fetch(`http://13.54.47.248:8080/auth/mail/${email}`, {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    alert('인증번호가 발송되었습니다.');
+                } else {
+                    alert('인증번호 발송에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('인증번호 요청 중 오류가 발생했습니다.');
+            }
+        });
+
+        $('#joinForm').on('submit', async function(event) {
+            event.preventDefault();
+            const joinData = {
+                id: $('#email').val(),
+                password: $('#password').val(),
+                name: $('#name').val(),
+                code: $('#verificationCode').val()
+            };
+            try {
+                const response = await fetch('http://13.54.47.248:8080/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(joinData)
+                });
+                if (response.ok) {
+                    alert('회원가입에 성공했습니다.');
+                    window.location.href = 'login.html';
+                } else {
+                    alert('회원가입에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('회원가입 중 오류가 발생했습니다.');
+            }
+        });
+    </script>
 </body>
 </html>

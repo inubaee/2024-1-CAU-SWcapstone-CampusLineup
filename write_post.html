@@ -5,109 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>글쓰기</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-        body {
-            padding-top: 0;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
-        }
-
         .container {
-        margin-top: 20px; /* 헤더와 폼 사이에 20px의 마진 추가 */
+            margin-top: 50px;
         }
 
-
-        .form-write {
+        .form-container {
             max-width: 600px;
-            padding: 15px;
             margin: 0 auto;
-            background-color: white;
-            border: 1px solid #e3e3e3;
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.05);
-        }
-
-        .form-write input,
-        .form-write select,
-        .form-write textarea {
-            margin-bottom: 15px; /* 각 입력 필드 및 드롭다운의 하단에 15px의 마진 추가 */
-        }
-
-        .custom-file-upload {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .custom-file-upload img {
-            cursor: pointer;
-            width: 50px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(function(){
-            $("#header-placeholder").load("header.html");
-        });
-    </script>
-    
+    <script src="common.js"></script>
+
+
     <div class="container">
-        <form id="writeForm" class="form-write">
-            <select name="category" class="form-control" required>
-                <option value="Free_Board">자유 게시판</option>
-                <option value="Finding_Friend">동행 찾기</option>
-                <option value="Festival_Review">축제 후기</option>
-            </select>
-            <input type="text" id="title" name="title" class="form-control" placeholder="제목" required autofocus>
-            <textarea id="content" name="content" class="form-control" placeholder="내용을 입력하세요" required rows="8"></textarea>
-            <div class="custom-file-upload">
-                <input type="file" id="file" name="photo" style="display: none;">
-                <img src="attach.png" alt="Upload" onclick="document.getElementById('file').click();">
-                <span id="file-name"></span>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">게시하기</button>
-        </form>
+        <div class="form-container">
+            <h2>글쓰기</h2>
+            <form id="postForm">
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" class="form-control" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">카테고리</label>
+                    <select class="form-control" id="category" required>
+                        <option value="공지사항">공지사항</option>
+                        <option value="자유_게시판">자유 게시판</option>
+                        <option value="동행_찾기">동행 찾기</option>
+                        <option value="축제_후기">축제 후기</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">내용</label>
+                    <textarea class="form-control" id="description" rows="10" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">작성</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        document.getElementById('file').addEventListener('change', function() {
-            var fileName = this.value.split('\\').pop();
-            document.getElementById('file-name').textContent = fileName; // 파일 이름 표시
-        });
+        $('#postForm').on('submit', async function(event) {
+            event.preventDefault();
 
-        //여기부터 새로추가
-        $('#writeForm').submit(function(event) {
-            event.preventDefault(); // 기본 폼 제출을 막음
-    
             const postData = {
-                userId: 0, // 실제 사용자 ID를 여기에 설정해야 합니다.
-                category: $('select[name="category"]').val(),
+                userId: 1, // 실제 사용자 ID로 대체하세요
                 title: $('#title').val(),
-                description: $('#content').val()
+                description: $('#description').val(),
+                category: $('#category').val()
             };
-    
-            $.ajax({
-                url: 'http://13.54.47.248:8080/posting',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(postData),
-                success: function(response) {
-                    alert('게시글이 등록되었습니다.');
-                    window.location.href = 'community.html'; // 등록 후 커뮤니티 페이지로 이동
-                },
-                error: function(xhr, status, error) {
-                    const errorMsg = '게시글 등록 중 오류가 발생했습니다. 에러 내용: ' + xhr.responseText;
-                    $('body').append('<div class="alert alert-danger" role="alert">' + errorMsg + '</div>');
-                }
-            });
-        });
-        //이까지
-    </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            console.log('Post Data:', postData);
+
+            try {
+                const response = await fetch('http://13.54.47.248:8080/posting', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (response.ok) {
+                    alert('글이 성공적으로 작성되었습니다.');
+                    window.location.href = 'community.html'; // 커뮤니티 페이지로 이동
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error Data:', errorData);
+                    alert(`글 작성에 실패했습니다: ${errorData.message || response.statusText}`);
+                }
+            } catch (error) {
+                console.error('글 작성 중 오류가 발생했습니다.', error);
+                alert('글 작성 중 오류가 발생했습니다.');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -8,67 +8,92 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <style>
     .container {
+      max-width: 70%;
       margin-top: 50px;
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      border-radius: 5px;
     }
-    .form-group-half {
-      width: 100%;
+    .form-group {
+      margin-bottom: 15px;
     }
-    .form-container {
+    .form-row {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
     }
-    .form-content {
-      width: 50%;
+    .form-row .form-group {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .form-row .form-group:last-child {
+      margin-right: 0;
     }
   </style>
 </head>
 <body>
   <div id="header-placeholder"></div>
-  <script>
-    $(function(){
-        $("#header-placeholder").load("header.html");
-    });
-  </script>
+  <script src="common.js"></script>
+
 
   <div class="container">
-    <h2 class="text-center">티켓 오픈</h2>
-    <div class="form-container">
-      <form id="ticketForm" class="form-content">
-        <div class="form-group form-group-half">
-          <label for="eventName">행사 이름</label>
-          <input type="text" class="form-control" id="eventName" required>
-        </div>
-        <div class="form-group form-group-half">
-          <label for="location">장소</label>
-          <input type="text" class="form-control" id="location" required>
-        </div>
-        <div class="form-group form-group-half">
+    <h2>티켓 오픈</h2>
+    <form id="ticketForm">
+      <div class="form-group">
+        <label for="school">학교 설정</label>
+        <select class="form-control" id="school" required>
+          <option value="중앙대학교">중앙대학교</option>
+          <option value="부산대학교">부산대학교</option>
+          <option value="숭실대학교">숭실대학교</option>
+          <option value="건국대학교">건국대학교</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="eventName">행사 이름</label>
+        <input type="text" class="form-control" id="eventName" required>
+      </div>
+      <div class="form-group">
+        <label for="location">장소</label>
+        <input type="text" class="form-control" id="location" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label for="startDatetime">시작 일시</label>
-          <input type="datetime-local" class="form-control" id="startDatetime" required step="60">
+          <input type="datetime-local" class="form-control" id="startDatetime" required>
         </div>
-        <div class="form-group form-group-half">
+        <div class="form-group">
           <label for="endDatetime">종료 일시</label>
-          <input type="datetime-local" class="form-control" id="endDatetime" required step="60">
+          <input type="datetime-local" class="form-control" id="endDatetime" required>
         </div>
-        <div class="form-group form-group-half">
-          <label for="description">상세 소개</label>
-          <textarea class="form-control" id="description" rows="3" required></textarea>
-        </div>
-        <div class="form-group form-group-half">
-          <label for="remainingTickets">잔여표</label>
-          <input type="number" class="form-control" id="remainingTickets" required>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">오픈하기</button>
-      </form>
-    </div>
+      </div>
+      <div class="form-group">
+        <label for="description">상세 소개</label>
+        <textarea class="form-control" id="description" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="remainingTickets">총 매수</label>
+        <input type="number" class="form-control" id="remainingTickets" required>
+      </div>
+      <button type="submit" class="btn btn-primary">오픈하기</button>
+    </form>
   </div>
 
   <script>
+    function formatDatetimeLocal(date) {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = ('0' + (d.getMonth() + 1)).slice(-2);
+      const day = ('0' + d.getDate()).slice(-2);
+      const hours = ('0' + d.getHours()).slice(-2);
+      const minutes = ('0' + d.getMinutes()).slice(-2);
+      return `${year}. ${month}. ${day} ${hours}:${minutes}`;
+    }
+
     $('#ticketForm').on('submit', async function(event) {
       event.preventDefault();
 
       const ticketData = {
         openUserId: 1, // Replace with actual user ID
+        schoolName: $('#school').val(), // 학교명 추가
         totalAmount: $('#remainingTickets').val(),
         ticketOpenTime: $('#startDatetime').val(),
         ticketCloseTime: $('#endDatetime').val(),
@@ -101,3 +126,4 @@
   </script>
 </body>
 </html>
+
