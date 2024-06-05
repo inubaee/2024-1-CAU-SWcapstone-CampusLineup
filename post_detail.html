@@ -71,7 +71,6 @@
   <div id="header-placeholder"></div>
   <script src="common.js"></script>
 
-
   <div class="container">
     <h2 id="postCategory">커뮤니티 카테고리</h2>
     <hr class="content-divider">
@@ -84,7 +83,7 @@
     <div class="content-divider"></div>
     <div class="post-stats">
       좋아요: <span id="likeCount">0</span> | 댓글: <span id="commentCount">0</span> | 조회수: <span id="vieWCount">0</span>
-      <button class="like-btn" onclick="likePost()">좋아요</button>
+      <button class="like-btn" id="likeBtn" onclick="likePost()">좋아요</button>
     </div>
     <div class="content-divider"></div>
     <div id="comments" class="comment-container">
@@ -99,6 +98,8 @@
   <script>
     let postId;
     let comments = [];
+    let userId = JSON.parse(localStorage.getItem('user')).id;
+    let userHasLiked = false;
 
     function getPostIdFromUrl() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -124,7 +125,7 @@
         success: function(data) {
           console.log(data); // 응답 데이터 출력
           $('#postCategory').text(data.category);
-          $('#postWriter').text(data.writer.id);
+          $('#postWriter').text(data.writer.name);
           $('#postDate').text(formatDate(data.createdAt));
           $('#postTitle').text(data.title);
           $('#postContent').text(data.description);
@@ -133,6 +134,7 @@
           $('#vieWCount').text(data.vieWCount);
           comments = data.comments;
           displayComments();
+          checkUserLikeStatus();
         },
         error: function(xhr, status, error) {
           console.error('게시글을 가져오는 중 오류 발생:', error);
@@ -146,7 +148,7 @@
       comments.forEach(comment => {
         const commentElement = `
           <div class="comment">
-            <div class="comment-meta">${comment.writer.id} | ${formatDate(comment.createdAt)}</div>
+            <div class="comment-meta">${comment.writer.name} | ${formatDate(comment.createdAt)}</div>
             <div>${comment.value}</div>
           </div>
         `;
@@ -154,15 +156,41 @@
       });
     }
 
-    function likePost() {
-      const url = `http://13.54.47.248:8080/like/postings/${postId}`;
+    function checkUserLikeStatus() {
+      const url = `http://13.54.47.248:8080/like/postings/${postId}?userId=${userId}`;
 
       $.ajax({
         url: url,
-        method: 'POST',
+        method: 'GET',
+        success: function(data) {
+          userHasLiked = data.liked;
+          if (userHasLiked) {
+            $('#likeBtn').text('좋아요 취소');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('좋아요 상태 확인 중 오류 발생:', error);
+        }
+      });
+    }
+
+    function likePost() {
+      const url = `http://13.54.47.248:8080/like/postings/${postId}?userId=${userId}`;
+      const method = userHasLiked ? 'DELETE' : 'POST';
+
+      $.ajax({
+        url: url,
+        method: method,
         success: function() {
           let likeCount = parseInt($('#likeCount').text());
-          $('#likeCount').text(likeCount + 1);
+          if (userHasLiked) {
+            $('#likeCount').text(likeCount - 1);
+            $('#likeBtn').text('좋아요');
+          } else {
+            $('#likeCount').text(likeCount + 1);
+            $('#likeBtn').text('좋아요 취소');
+          }
+          userHasLiked = !userHasLiked;
         },
         error: function(xhr, status, error) {
           console.error('좋아요 처리 중 오류 발생:', error);
@@ -175,7 +203,7 @@
       if (!commentValue) return;
 
       const commentData = {
-        userId: 1, // Replace with actual user ID
+        userId: userId,
         postingId: postId,
         comment: commentValue
       };

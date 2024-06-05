@@ -1,169 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>축제 상세 정보</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-      .poster {
-        width: 400px; /* 최대 너비 */
-        height: 400px; /* 최대 높이 */
-        object-fit: cover;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>축제 상세 정보</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    .poster {
+      width: 400px; /* 최대 너비 */
+      height: 400px; /* 최대 높이 */
+      object-fit: cover;
+    }
 
-      .artist img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
+    .artist img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
 
-      .lineup-date {
-        font-weight: bold;
-      }
+    .lineup-date {
+      font-weight: bold;
+    }
 
-      .days-left {
-        background-color: #007bff;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-      }
+    .days-left {
+      background-color: #007bff;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
 
-      .ticket-button {
-        margin-top: 20px;
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+    .ticket-button, .scrap-button {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-      .ticket-button:hover {
-        background-color: #0056b3;
-      }
-    </style>
-  </head>
+    .ticket-button:hover, .scrap-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
   <div id="header-placeholder"></div>
   <script src="common.js"></script>
 
+  <div class="container mt-4">
+    <!-- 포스터 -->
+    <img class="poster" src="" alt="축제 포스터" />
 
-  <body>
-
-    <div class="container mt-4">
-      <!-- 포스터 -->
-      <img class="poster" src="" alt="축제 포스터" />
-
-      <!-- 축제 정보 -->
-      <div class="mt-4">
-        <h3 id="schoolName"></h3>
-        <p id="season"></p>
-        <p id="period"></p>
-      </div>
-
-      <!-- 축제 시작일자까지 남은 일수 -->
-      <div class="mt-4">
-        <p>축제 시작까지 <span class="days-left" id="daysLeft">D-20</span></p>
-      </div>
-
-      <!-- 아티스트 라인업 -->
-      <div class="lineup mt-4" id="lineupContainer">
-        <h4>아티스트 라인업</h4>
-      </div>
-
-      <!-- 티케팅 버튼 -->
-      <button class="ticket-button" id="ticketButton">현재 티케팅 중인 행사 바로가기</button>
+    <!-- 축제 정보 -->
+    <div class="mt-4">
+      <h3 id="schoolName"></h3>
+      <p id="season"></p>
+      <p id="period"></p>
     </div>
 
-    <script>
-      // URL에서 id 가져오기
-      const urlParams = new URLSearchParams(window.location.search);
-      const festivalId = urlParams.get("id");
+    <!-- 축제 시작일자까지 남은 일수 -->
+    <div class="mt-4">
+      <p>축제 시작까지 <span class="days-left" id="daysLeft">D-20</span></p>
+    </div>
 
-      // 축제 세부 정보 불러오기
-      fetchFestivalDetails(festivalId);
+    <!-- 아티스트 라인업 -->
+    <div class="lineup mt-4" id="lineupContainer">
+      <h4>아티스트 라인업</h4>
+    </div>
 
-      async function fetchFestivalDetails(id) {
-        try {
-          const response = await fetch(`http://13.54.47.248:8080/festivals/${id}`);
-          const festival = await response.json();
-          displayFestivalDetails(festival);
-        } catch (error) {
-          console.error("Error fetching festival details:", error);
-        }
+    <!-- 티케팅 버튼 -->
+    <button class="ticket-button" id="ticketButton">현재 티케팅 중인 행사 바로가기</button>
+    <!-- 스크랩 버튼 -->
+    <button class="scrap-button" onclick="scrapFestival()">스크랩</button>
+  </div>
+
+  <script>
+    // URL에서 id 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const festivalId = urlParams.get("id");
+
+    // 축제 세부 정보 불러오기
+    fetchFestivalDetails(festivalId);
+
+    async function fetchFestivalDetails(id) {
+      try {
+        const response = await fetch(`http://13.54.47.248:8080/festivals/${id}`);
+        const festival = await response.json();
+        displayFestivalDetails(festival);
+      } catch (error) {
+        console.error("Error fetching festival details:", error);
       }
+    }
 
-      // 축제 세부 정보 표시하기
-      function displayFestivalDetails(festival) {
-        // 포스터 이미지 설정
-        document.querySelector(".poster").src = festival.imageUrl;
+    // 축제 세부 정보 표시하기
+    function displayFestivalDetails(festival) {
+      // 포스터 이미지 설정
+      document.querySelector(".poster").src = festival.imageUrl;
 
-        // 축제 정보 설정
-        document.querySelector("#schoolName").textContent =
-          festival.school.name;
-        document.querySelector("#season").textContent = festival.season;
-        document.querySelector(
-          "#period"
-        ).textContent = `${festival.startDate} ~ ${festival.endDate}`;
+      // 축제 정보 설정
+      document.querySelector("#schoolName").textContent = festival.school.name;
+      document.querySelector("#season").textContent = festival.season;
+      document.querySelector("#period").textContent = `${new Date(festival.startDate).toLocaleString()} ~ ${new Date(festival.endDate).toLocaleString()}`;
 
-        // 축제 시작일자까지 남은 일수 계산
-        const startDate = new Date(festival.startDate);
-        const today = new Date();
-        const daysLeft = Math.ceil((startDate - today) / (1000 * 3600 * 24));
-        document.querySelector("#daysLeft").textContent = "D-" + daysLeft;
+      // 축제 시작일자까지 남은 일수 계산
+      const startDate = new Date(festival.startDate);
+      const today = new Date();
+      const daysLeft = Math.ceil((startDate - today) / (1000 * 3600 * 24));
+      document.querySelector("#daysLeft").textContent = "D" + daysLeft;
 
-        // 아티스트 라인업 설정
-        const lineupContainer = document.getElementById("lineupContainer");
-        festival.lineUps.forEach((lineup, index) => {
-          const lineupDate = new Date(lineup.startTime);
-          const lineupDateString =
-            lineupDate.getFullYear() +
-            "년 " +
-            (lineupDate.getMonth() + 1) +
-            "월 " +
-            lineupDate.getDate() +
-            "일 (" +
-            getDayOfWeek(lineupDate.getDay()) +
-            ")";
-          let lineupHtml =
-            '<div class="lineup-date">' +
-            lineupDateString +
-            " | " +
-            lineupDate.getHours() +
-            "시</div><div class='row'>";
+      // 아티스트 라인업 설정
+      const lineupContainer = document.getElementById("lineupContainer");
+      festival.lineUps.forEach((lineup, index) => {
+        const lineupDate = new Date(lineup.startTime);
+        const lineupDateString = lineupDate.getFullYear() + "년 " + (lineupDate.getMonth() + 1) + "월 " + lineupDate.getDate() + "일 (" + getDayOfWeek(lineupDate.getDay()) + ")";
+        let lineupHtml = '<div class="lineup-date">' + lineupDateString + " | " + lineupDate.getHours() + "시</div><div class='row'>";
 
-          lineup.artists.forEach((artist, artistIndex) => {
-            lineupHtml +=
-              '<div class="col-sm-4"><div class="artist" id="artist-' +
-              artistIndex +
-              '"><img src="' +
-              artist.imageUrl +
-              '" alt="' +
-              artist.name +
-              '"><p>' +
-              artist.name +
-              "</p></div></div>";
-          });
-          lineupHtml += "</div>";
-          lineupContainer.insertAdjacentHTML("beforeend", lineupHtml);
+        lineup.artists.forEach((artist, artistIndex) => {
+          lineupHtml += '<div class="col-sm-4"><div class="artist" id="artist-' + artistIndex + '"><img src="' + artist.imageUrl + '" alt="' + artist.name + '"><p>' + artist.name + "</p></div></div>";
         });
+        lineupHtml += "</div>";
+        lineupContainer.insertAdjacentHTML("beforeend", lineupHtml);
+      });
 
-        // 티케팅 버튼 클릭 시 이벤트 설정
-        document.querySelector("#ticketButton").onclick = function() {
-          window.location.href = `ticketing.html?search=${festival.school.name}`;
-        };
+      // 티케팅 버튼 클릭 시 이벤트 설정
+      document.querySelector("#ticketButton").onclick = function() {
+        window.location.href = `ticketing.html?search=${festival.school.name}`;
+      };
+    }
+
+    // 요일 구하는 함수
+    function getDayOfWeek(day) {
+      const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+      return daysOfWeek[day];
+    }
+
+    // 스크랩 기능 추가
+    function scrapFestival() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        alert('로그인이 필요합니다.');
+        return;
       }
 
-      // 요일 구하는 함수
-      function getDayOfWeek(day) {
-        const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-        return daysOfWeek[day];
-      }
-    </script>
-  </body>
+      const url = `http://13.54.47.248:8080/like/festivals/${festivalId}?userId=${user.id}`;
+      $.ajax({
+        url: url,
+        method: 'POST',
+        success: function() {
+          alert('축제가 스크랩되었습니다.');
+        },
+        error: function(xhr, status, error) {
+          console.error('스크랩 중 오류 발생:', error);
+          alert('스크랩에 실패했습니다.');
+        }
+      });
+    }
+  </script>
+</body>
 </html>

@@ -100,7 +100,6 @@
     <div id="header-placeholder"></div>
     <script src="common.js"></script>
 
-
     <table class="btn-group-table">
         <tr>
             <td><button type="button" class="btn btn-secondary" onclick="changeCategory('전체')">전체</button></td>
@@ -117,9 +116,9 @@
                 <tr>
                     <th scope="col">번호</th>
                     <th scope="col">제목</th>
-                    <th scope="col">글쓴이</th>
                     <th scope="col">작성일</th>
-                    <th scope="col">조회</th>
+                    <th scope="col">조회수</th>
+                    <th scope="col">좋아요</th>
                 </tr>
             </thead>
             <tbody id="board-content">
@@ -139,15 +138,26 @@
             "동행 찾기": [],
             "축제 후기": []
         };
-        
+
+        function formatDate(date) {
+            const now = new Date();
+            const d = new Date(date);
+            const isToday = now.toDateString() === d.toDateString();
+            if (isToday) {
+                return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            } else {
+                return `${d.getMonth() + 1}.${d.getDate()}`;
+            }
+        }
+
         function fetchPostings() {
             const url = 'http://13.54.47.248:8080/posting';
-        
+
             $.ajax({
                 url: url,
                 method: 'GET',
                 success: function(data) {
-                    console.log(data); // 응답 데이터 출력
+                    console.log('Fetched postings:', data); // 응답 데이터 출력
                     data.forEach(post => {
                         if (boards[post.category]) {
                             boards[post.category].push(post);
@@ -162,7 +172,7 @@
                 }
             });
         }
-        
+
         function changeCategory(category) {
             let data = [];
             if (category === '전체') {
@@ -173,24 +183,24 @@
             } else {
                 data = boards[category] || [];
             }
-        
+
             const tbody = document.getElementById('board-content');
             tbody.innerHTML = '';
-        
+
             data.forEach((post, index) => {
                 const row = `
                     <tr>
                         <td>${index + 1}</td>
                         <td><a href="post_detail.html?id=${post.id}&increaseViewCount=true">${post.title}</a></td>
-                        <td>${post.writer.id}</td>
-                        <td>${new Date(post.createdAt).toLocaleString()}</td>
+                        <td>${formatDate(post.createdAt)}</td>
                         <td>${post.vieWCount !== undefined ? post.vieWCount : 0}</td>
+                        <td>${post.likeCount !== undefined ? post.likeCount : 0}</td>
                     </tr>
                 `;
                 tbody.innerHTML += row;
             });
         }
-        
+
         $(document).ready(function() {
             fetchPostings();
         });

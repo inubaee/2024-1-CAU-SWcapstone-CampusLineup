@@ -41,7 +41,7 @@
     <div class="header-container">
       <h2>현재 티켓팅 중인 행사</h2>
       <div class="search-container">
-        <input type="text" id="searchInput" class="form-control" placeholder="행사 이름 검색" style="width: 300px;">
+        <input type="text" id="searchInput" class="form-control" placeholder="학교 이름 검색" style="width: 300px;">
         <button class="btn btn-primary ml-2" onclick="filterTickets()">검색</button>
       </div>
       <a href="ticketing_admin.html" class="btn btn-success open-ticket-btn">티켓 오픈</a> <!-- 티켓 오픈 버튼 -->
@@ -77,11 +77,12 @@
       ticketsContainer.empty();
 
       tickets.forEach(ticket => {
+        const schoolName = ticket.school && ticket.school.name ? ticket.school.name : '학교 정보 없음';
         const ticketElement = `
           <div class="col-md-6">
             <div class="ticket">
               <h3>${ticket.title}</h3>
-              <p>학교: ${ticket.schoolName}</p> <!-- 학교명 표시 -->
+              <p>학교: ${schoolName}</p> <!-- 학교명 표시 -->
               <p>장소: ${ticket.location}</p>
               <p>기간: ${new Date(ticket.ticketOpenTime).toLocaleString()} - ${new Date(ticket.ticketCloseTime).toLocaleString()}</p>
               <p>${ticket.description}</p>
@@ -97,8 +98,7 @@
     function filterTickets() {
       const searchInput = $('#searchInput').val().toLowerCase();
       const filteredTickets = allTickets.filter(ticket => 
-        ticket.title.toLowerCase().includes(searchInput) ||
-        ticket.schoolName.toLowerCase().includes(searchInput) // 학교명도 검색에 포함
+        ticket.school && ticket.school.name && ticket.school.name.toLowerCase().includes(searchInput) // 학교명 검색에 포함
       );
       displayTickets(filteredTickets);
     }
