@@ -34,17 +34,16 @@
   <div id="header-placeholder"></div>
   <script src="common.js"></script>
 
-
   <div class="container">
     <h2>티켓 오픈</h2>
     <form id="ticketForm">
       <div class="form-group">
         <label for="school">학교 설정</label>
         <select class="form-control" id="school" required>
-          <option value="중앙대학교">중앙대학교</option>
-          <option value="부산대학교">부산대학교</option>
-          <option value="숭실대학교">숭실대학교</option>
-          <option value="건국대학교">건국대학교</option>
+          <option value="1">중앙대학교</option>
+          <option value="2">부산대학교</option>
+          <option value="3">숭실대학교</option>
+          <option value="4">건국대학교</option>
         </select>
       </div>
       <div class="form-group">
@@ -78,52 +77,78 @@
   </div>
 
   <script>
-    function formatDatetimeLocal(date) {
-      const d = new Date(date);
-      const year = d.getFullYear();
-      const month = ('0' + (d.getMonth() + 1)).slice(-2);
-      const day = ('0' + d.getDate()).slice(-2);
-      const hours = ('0' + d.getHours()).slice(-2);
-      const minutes = ('0' + d.getMinutes()).slice(-2);
-      return `${year}. ${month}. ${day} ${hours}:${minutes}`;
-    }
-
     $('#ticketForm').on('submit', async function(event) {
       event.preventDefault();
 
-      const ticketData = {
-        openUserId: 1, // Replace with actual user ID
-        schoolName: $('#school').val(), // 학교명 추가
-        totalAmount: $('#remainingTickets').val(),
-        ticketOpenTime: $('#startDatetime').val(),
-        ticketCloseTime: $('#endDatetime').val(),
-        eventTime: $('#startDatetime').val(), // Assuming eventTime is the start time
-        title: $('#eventName').val(),
-        location: $('#location').val(),
-        description: $('#description').val()
-      };
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user || !user.id) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+      }
 
+      // 유저 프로필 조회
+      let userProfile;
       try {
-        const response = await fetch('http://13.54.47.248:8080/ticketing', {
-          method: 'POST',
+        const response = await fetch(`http://13.54.47.248:8080/user/${user.id}`, {
           headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(ticketData)
+            'Authorization': `Bearer ${user.token}` // 사용자 토큰 사용
+          }
         });
-
-        if (response.ok) {
-          alert('티켓이 오픈되었습니다.');
-          window.location.href = 'ticketing.html'; // 티켓팅 페이지로 이동
-        } else {
-          alert('티켓 오픈에 실패했습니다.');
-        }
+        userProfile = await response.json();
       } catch (error) {
-        console.error('Error creating ticket:', error);
-        alert('티켓 오픈 중 오류가 발생했습니다.');
+        console.error('Error fetching user profile:', error);
+        alert('유저 정보를 불러오는데 실패했습니다.');
+        return;
+      }
+
+      const selectedSchoolId = parseInt($('#school').val());
+      const selectedSchoolName = $('#school option:selected').text();
+      console.log('Selected School:', selectedSchoolName);
+      console.log('User School:', userProfile.school ? userProfile.school.name : 'No school found');
+
+      if (userProfile.school && userProfile.school.name === selectedSchoolName) {
+        // 유저의 학교가 선택된 학교와 일치할 때 티켓 오픈 요청
+        const ticketData = {
+          openUserId: user.id, // 현재 로그인한 사용자의 ID 사용
+          schoolId: selectedSchoolId, // 선택한 학교의 ID 사용
+          totalAmount: parseInt($('#remainingTickets').val()), // 숫자로 변환
+          ticketOpenTime: new Date($('#startDatetime').val()).toISOString(), // ISO 형식으로 변환
+          ticketCloseTime: new Date($('#endDatetime').val()).toISOString(), // ISO 형식으로 변환
+          eventTime: new Date($('#startDatetime').val()).toISOString(), // Assuming eventTime is the start time, ISO 형식으로 변환
+          title: $('#eventName').val(),
+          location: $('#location').val(),
+          description: $('#description').val()
+        };
+
+        console.log('Ticket Data:', ticketData);
+
+        try {
+          const response = await fetch('http://13.54.47.248:8080/ticketing', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}` // 사용자 토큰 사용
+            },
+            body: JSON.stringify(ticketData)
+          });
+
+          if (response.ok) {
+            alert('티켓이 오픈되었습니다.');
+            window.location.href = 'ticketing.html'; // 티켓팅 페이지로 이동
+          } else {
+            const errorData = await response.json();
+            alert(`티켓 오픈에 실패했습니다: ${errorData.message}`);
+          }
+        } catch (error) {
+          console.error('Error creating ticket:', error);
+          alert('티켓 오픈 중 오류가 발생했습니다.');
+        }
+      } else {
+        // 유저의 학교가 선택된 학교와 일치하지 않을 때 경고 메시지
+        alert('해당 학교에 재학중인 학생이 아닙니다.');
       }
     });
   </script>
 </body>
 </html>
-
