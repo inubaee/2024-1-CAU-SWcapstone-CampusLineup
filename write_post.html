@@ -1,100 +1,155 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>글쓰기</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        .container {
-            margin-top: 50px;
-        }
-
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>티켓 오픈</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    .container {
+      max-width: 70%;
+      margin-top: 50px;
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .form-row .form-group {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .form-row .form-group:last-child {
+      margin-right: 0;
+    }
+  </style>
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <script src="common.js"></script>
+  <div id="header-placeholder"></div>
+  <script src="common.js"></script>
 
-
-    <div class="container">
-        <div class="form-container">
-            <h2>글쓰기</h2>
-            <form id="postForm">
-                <div class="form-group">
-                    <label for="title">제목</label>
-                    <input type="text" class="form-control" id="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="category">카테고리</label>
-                    <select class="form-control" id="category" required>
-                        <option value="공지사항">공지사항</option>
-                        <option value="자유_게시판">자유 게시판</option>
-                        <option value="동행_찾기">동행 찾기</option>
-                        <option value="축제_후기">축제 후기</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="description">내용</label>
-                    <textarea class="form-control" id="description" rows="10" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">작성</button>
-            </form>
+  <div class="container">
+    <h2>티켓 오픈</h2>
+    <form id="ticketForm">
+      <div class="form-group">
+        <label for="school">학교 설정</label>
+        <select class="form-control" id="school" required>
+          <option value="1">중앙대학교</option>
+          <option value="2">부산대학교</option>
+          <option value="3">숭실대학교</option>
+          <option value="4">건국대학교</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="eventName">행사 이름</label>
+        <input type="text" class="form-control" id="eventName" required>
+      </div>
+      <div class="form-group">
+        <label for="location">장소</label>
+        <input type="text" class="form-control" id="location" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startDatetime">시작 일시</label>
+          <input type="datetime-local" class="form-control" id="startDatetime" required>
         </div>
-    </div>
+        <div class="form-group">
+          <label for="endDatetime">종료 일시</label>
+          <input type="datetime-local" class="form-control" id="endDatetime" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description">상세 소개</label>
+        <textarea class="form-control" id="description" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="remainingTickets">총 매수</label>
+        <input type="number" class="form-control" id="remainingTickets" required>
+      </div>
+      <button type="submit" class="btn btn-primary">오픈하기</button>
+    </form>
+  </div>
 
-    <script>
-        $('#postForm').on('submit', async function(event) {
-            event.preventDefault();
+  <script>
+    $('#ticketForm').on('submit', async function(event) {
+      event.preventDefault();
 
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user || !user.id) {
-                alert('로그인이 필요합니다.');
-                window.location.href = 'login.html';
-                return;
-            }
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user || !user.id) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+      }
 
-            const postData = {
-                userId: user.id, // 로컬 스토리지에서 가져온 사용자 ID
-                title: $('#title').val(),
-                description: $('#description').val(),
-                category: $('#category').val()
-            };
-
-            console.log('Post Data:', postData);
-
-            try {
-                const response = await fetch('http://13.54.47.248:8080/posting', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${user.token}` // 사용자 토큰 사용
-                    },
-                    body: JSON.stringify(postData)
-                });
-
-                if (response.ok) {
-                    alert('글이 성공적으로 작성되었습니다.');
-                    window.location.href = 'community.html'; // 커뮤니티 페이지로 이동
-                } else {
-                    const errorData = await response.json();
-                    console.error('Error Data:', errorData);
-                    alert(`글 작성에 실패했습니다: ${errorData.message || response.statusText}`);
-                }
-            } catch (error) {
-                console.error('글 작성 중 오류가 발생했습니다.', error);
-                alert('글 작성 중 오류가 발생했습니다.');
-            }
+      // 유저 프로필 조회
+      let userProfile;
+      try {
+        const response = await fetch(`http://13.54.47.248:8080/user/${user.id}`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}` // 사용자 토큰 사용
+          }
         });
-    </script>
+        userProfile = await response.json();
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        alert('유저 정보를 불러오는데 실패했습니다.');
+        return;
+      }
+
+      const selectedSchoolId = parseInt($('#school').val());
+      const selectedSchoolName = $('#school option:selected').text();
+      console.log('Selected School:', selectedSchoolName);
+      console.log('User School:', userProfile.school ? userProfile.school.name : 'No school found');
+
+      if (userProfile.school && userProfile.school.name === selectedSchoolName) {
+        // 유저의 학교가 선택된 학교와 일치할 때 티켓 오픈 요청
+        const ticketData = {
+          openUserId: user.id, // 현재 로그인한 사용자의 ID 사용
+          schoolId: selectedSchoolId, // 선택한 학교의 ID 사용
+          totalAmount: parseInt($('#remainingTickets').val()), // 숫자로 변환
+          ticketOpenTime: new Date($('#startDatetime').val()).toISOString(), // ISO 형식으로 변환
+          ticketCloseTime: new Date($('#endDatetime').val()).toISOString(), // ISO 형식으로 변환
+          eventTime: new Date($('#startDatetime').val()).toISOString(), // Assuming eventTime is the start time, ISO 형식으로 변환
+          title: $('#eventName').val(),
+          location: $('#location').val(),
+          description: $('#description').val()
+        };
+
+        console.log('Ticket Data:', ticketData);
+
+        try {
+          const response = await fetch('http://13.54.47.248:8080/ticketing', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}` // 사용자 토큰 사용
+            },
+            body: JSON.stringify(ticketData)
+          });
+
+          if (response.ok) {
+            alert('티켓이 오픈되었습니다.');
+            window.location.href = 'ticketing.html'; // 티켓팅 페이지로 이동
+          } else {
+            const errorData = await response.json();
+            console.error('Error Data:', errorData); // 서버로부터 반환된 에러 데이터를 콘솔에 출력
+            alert(`티켓 오픈에 실패했습니다: ${errorData.message || '알 수 없는 오류가 발생했습니다.'}`);
+          }
+        } catch (error) {
+          console.error('Error creating ticket:', error);
+          alert('티켓 오픈 중 오류가 발생했습니다.');
+        }
+      } else {
+        // 유저의 학교가 선택된 학교와 일치하지 않을 때 경고 메시지
+        alert('해당 학교에 재학중인 학생이 아닙니다.');
+      }
+    });
+  </script>
 </body>
 </html>
