@@ -30,6 +30,7 @@
       color: white;
       padding: 5px 10px;
       border-radius: 5px;
+      display: inline-block;
     }
 
     .ticket-button, .scrap-button {
@@ -64,7 +65,7 @@
 
     <!-- 축제 시작일자까지 남은 일수 -->
     <div class="mt-4">
-      <p>축제 시작까지 <span class="days-left" id="daysLeft">D-20</span></p>
+      <p><span class="days-left" id="daysLeft">D-20</span></p>
     </div>
 
     <!-- 아티스트 라인업 -->
@@ -108,9 +109,22 @@
 
       // 축제 시작일자까지 남은 일수 계산
       const startDate = new Date(festival.startDate);
+      const endDate = new Date(festival.endDate);
       const today = new Date();
-      const daysLeft = Math.ceil((startDate - today) / (1000 * 3600 * 24));
-      document.querySelector("#daysLeft").textContent = "D" + daysLeft;
+      let daysLeftText;
+
+      if (today > endDate) {
+        daysLeftText = "축제가 종료되었습니다.";
+        document.querySelector("#daysLeft").classList.add("expired");
+      } else {
+        const daysLeft = Math.ceil((startDate - today) / (1000 * 3600 * 24));
+        if (daysLeft < 0) {
+          daysLeftText = "축제가 진행 중입니다.";
+        } else {
+          daysLeftText = `D-${daysLeft}`;
+        }
+      }
+      document.querySelector("#daysLeft").textContent = daysLeftText;
 
       // 아티스트 라인업 설정
       const lineupContainer = document.getElementById("lineupContainer");
